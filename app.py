@@ -60,7 +60,7 @@ def add_user():
     db.session.add(new_user)
     db.session.commit()
 
-    return redirect(f'/users')
+    return redirect('/users')
 
 
 @app.route('/users/<int:user_id>/edit', methods=["GET"])
@@ -82,9 +82,6 @@ def edit_user(user_id):
     user.first_name = request.form["first-name"]
     user.last_name = request.form["last-name"]
     user.image_url = request.form["profile-image"] or None
-
-    # NOTE: Make sure to not submit a new record
-    # NOTE: Make sure to not edit the user to be an empty record
 
     # Add to db
     db.session.add(user)
