@@ -26,7 +26,7 @@ def home():
 @app.route('/users', methods=["GET"])
 def list_users():
     """Shows list of all users in db"""
-    users = User.query.all()
+    users = User.query.order_by(User.last_name, User.first_name).all()
     return render_template('users/list.html', users=users)
 
 
