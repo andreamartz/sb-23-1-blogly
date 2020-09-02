@@ -10,6 +10,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly_db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['SECRET_KEY'] = "supersecretcodefordebugtoolbar"
+# Having the Debug Toolbar show redirects explicitly is often useful.  To turn it on, comment out this line:
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 debug = DebugToolbarExtension(app)
 
@@ -25,7 +26,7 @@ def home():
 @app.route('/users', methods=["GET"])
 def list_users():
     """Shows list of all users in db"""
-    users = User.query.all()
+    users = User.query.order_by(User.last_name, User.first_name).all()
     return render_template('users/list.html', users=users)
 
 
@@ -59,7 +60,7 @@ def add_user():
     db.session.add(new_user)
     db.session.commit()
 
-    return redirect(f'/users')
+    return redirect('/users')
 
 
 @app.route('/users/<int:user_id>/edit', methods=["GET"])
@@ -81,9 +82,6 @@ def edit_user(user_id):
     user.first_name = request.form["first-name"]
     user.last_name = request.form["last-name"]
     user.image_url = request.form["profile-image"] or None
-
-    # NOTE: Make sure to not submit a new record
-    # NOTE: Make sure to not edit the user to be an empty record
 
     # Add to db
     db.session.add(user)
