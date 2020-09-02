@@ -5,7 +5,8 @@
 
 {% block content %}
 <h1>{{user.get_full_name()}}</h1>
-<figure class="user-image"><img class="figure-img img-fluid" src="{{user.image_url}}" alt=""></figure>
+<figure class="user-image"><img class="figure-img img-fluid" src="{{user.image_url}}" alt="{{ user.get_full_name() }}">
+</figure>
 
 <form action="">
   <button class="btn btn-primary" formmethod="GET" formaction="/users/{{user.id}}/edit">
