@@ -22,24 +22,24 @@ def home():
     return redirect('/users')
 
 
-@app.route('/users')
+@app.route('/users', methods=["GET"])
 def list_users():
     """Shows list of all users in db"""
     users = User.query.all()
-    return render_template('list.html', users=users)
+    return render_template('users/list.html', users=users)
 
 
-@app.route('/users/<int:user_id>')
+@app.route('/users/<int:user_id>', methods=["GET"])
 def show_user(user_id):
     """Shows details about user"""
     user = User.query.get_or_404(user_id)
-    return render_template('user-details.html', user=user)
+    return render_template('users/user-details.html', user=user)
 
 
-@app.route('/users/new')
+@app.route('/users/new', methods=["GET"])
 def show_new_user_form():
     """Shows add form for new users"""
-    return render_template('add-user.html')
+    return render_template('users/add-user.html')
 
 
 @app.route('/users/new', methods=["POST"])
@@ -62,12 +62,12 @@ def add_user():
     return redirect(f'/users')
 
 
-@app.route('/users/<int:user_id>/edit')
+@app.route('/users/<int:user_id>/edit', methods=["GET"])
 def show_edit_user(user_id):
     """Shows user edit page"""
     user = User.query.get_or_404(user_id)
     # NOTE: handle the situation where user_id is not valid
-    return render_template('edit-user.html', user=user)
+    return render_template('users/edit-user.html', user=user)
 
 
 @app.route('/users/<int:user_id>/edit', methods=["POST"])
