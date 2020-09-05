@@ -101,3 +101,69 @@ def delete_user(user_id):
     db.session.commit()
 
     return redirect('/users')
+
+
+@app.route('/users/<int:user_id>/posts/new', methods=["GET"])
+def show_new_post_form(user_id):
+    """Show form to add a post for that user."""
+    user = User.query.get_or_404(user_id)
+    return render_template('/posts/add-post.html', user=user)
+
+
+@app.route('/users/<int:user_id>/posts/new', methods=["POST"])
+def add_post(user_id):
+    """Handle form submission to add a post.
+    Redirect to the user detail page."""
+    user = User.query.get_or_404(user_id)
+
+    # Get form info
+    title = request.form["title"]
+    content = request.form["content"]
+
+    # Create new user instance
+    new_post = Post(title=title,
+                    content=content,
+                    user=user)
+
+    # Add to db
+    db.session.add(new_post)
+    db.session.commit()
+
+    return redirect(f"/users/{user_id}")
+
+# Posts routes
+
+
+@app.route('/posts/<int:post_id>', methods=["GET"])
+def show_post(post_id):
+    """Show a post.
+    Show buttons to edit and delete the post."""
+    post = Post.query.get_or_404(post_id)
+    return render_template("/posts/post-details.html", post=post)
+
+
+@app.route('/posts/<int:post_id>/edit', methods=["GET"])
+def show_post_edit_form(post_id):
+    """Show form to edit a post.
+    Also offer option to cancel (and go back to user page)."""
+    post = Post.query.get_or_404(post_id)
+    return render_template('/posts/edit-post.html', post=post)
+
+
+@app.route('/posts/<int:post_id>/edit', methods=["POST"])
+def handle_post_edits(post_id):
+    """Handel editing of a post.
+    Redirect back to the post view."""
+
+    post = Post.query.get_or_404(post_id)
+
+    # Get form info
+    post.title = request.form["title"]
+    post.content = request.form["content"]
+
+    # Add to db
+    db.session.add(post)
+    db.session.commit()
+
+    return redirect(f"/posts/{post.id}")
+
