@@ -25,6 +25,14 @@ def home():
     return render_template('posts/homepage.html', posts=posts)
 
 
+@app.errorhandler(404)
+def page_not_found(error):
+    """Handle 404 errors by showing custom 404 page."""
+    return render_template('404.html'), 404
+
+# Users routes
+
+
 @app.route('/users', methods=["GET"])
 def list_users():
     """Shows list of all users in db"""
