@@ -1,20 +1,35 @@
 <!DOCTYPE html>
 {% extends 'base.html' %}
 
-{% block title %}{{user.name}}{% endblock %}
+{% block title %}{{user.get_full_name()}}{% endblock %}
 
 {% block content %}
-<h1>{{user.get_full_name()}}</h1>
-<figure class="user-image"><img class="figure-img img-fluid" src="{{user.image_url}}" alt="{{ user.get_full_name() }}">
-</figure>
+<div class="row justify-content-center mt-5">
+  <div class="col-md-6 order-last text-left">
+    <h1>{{user.get_full_name()}}</h1>
+    <form action="">
+      <button class="btn btn-primary" formmethod="GET" formaction="/users/{{ user.id }}/edit">
+        Edit
+      </button>
+      <button class="btn btn-danger" formmethod="POST" formaction="/users/{{ user.id }}/delete">
+        Delete
+      </button>
+    </form>
+    <h2 class="mt-4">Posts</h2>
+    <ul>
+      {% for post in user.posts %}
+      <a href="/posts/{{ post.id }}">
+        <li>{{ post.title }}</li>
+      </a>
+      {% endfor %}
+    </ul>
+    <a href="/users/{{ user.id }}/posts/new"><button class="btn btn-primary">Add Post</button></a>
+  </div>
+  <div class="col-md-6 order-first d-flex justify-content-center">
+    <figure class="user-image"><img class="figure-img img-fluid" src="{{user.image_url}}"
+        alt="{{ user.get_full_name() }}">
+    </figure>
+  </div>
 
-<form action="">
-  <button class="btn btn-primary" formmethod="GET" formaction="/users/{{user.id}}/edit">
-    Edit
-  </button>
-  <button class="btn btn-danger" formmethod="POST" formaction="/users/{{user.id}}/delete">
-    Delete
-  </button>
-</form>
-
+</div>
 {% endblock %}
