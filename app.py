@@ -2,7 +2,7 @@
 
 from flask import Flask, request, render_template, redirect, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User
+from models import db, connect_db, User, Post
 
 app = Flask(__name__)
 
@@ -19,8 +19,18 @@ connect_db(app)
 
 @app.route('/')
 def home():
-    """Shows list of all users in db"""
-    return redirect('/users')
+    """Shows list of the five most recent posts."""
+    posts = Post.query.order_by(Post.created_at.desc()).limit(5)
+    # users = User.query.order_by(User.last_name, User.first_name).all()
+    return render_template('posts/homepage.html', posts=posts)
+
+
+@app.errorhandler(404)
+def page_not_found(error):
+    """Handle 404 errors by showing custom 404 page."""
+    return render_template('404.html'), 404
+
+# Users routes
 
 
 @app.route('/users', methods=["GET"])
@@ -89,15 +99,16 @@ def edit_user(user_id):
 
     return redirect('/users')
 
-# UNTESTED BELOW
-
 
 @app.route('/users/<int:user_id>/delete', methods=["POST"])
 def delete_user(user_id):
     """Deletes the user"""
-    user = User.query.filter_by(id=user_id)
+    # WORKS:
+    user = User.query.get_or_404(user_id)
+    db.session.delete(user)
 
-    user.delete()
+
+    flash(f"User {user.full_name} deleted.")
     db.session.commit()
 
     return redirect('/users')
@@ -167,3 +178,16 @@ def handle_post_edits(post_id):
 
     return redirect(f"/posts/{post.id}")
 
+
+@app.route('/posts/<int:post_id>/delete', methods=["POST"])
+def delete_post(post_id):
+    """Delete the post."""
+    # WORKS:
+    post = Post.query.get_or_404(post_id)
+    db.session.delete(post)
+
+    # DOES NOT WORK - AttributeError: 'Post' object has no attribute 'delete'
+    db.session.commit()
+    flash(f"Post '{ post.title }' deleted.")
+
+    return redirect(f"/users/{ post.user_id }")

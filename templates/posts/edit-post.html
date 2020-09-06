@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Post{% endblock %}
+
+{% block content %}
+
+
+
+<!-- NOT TESTED BELOW (copied from edit-user.html) -->
+<div class="row justify-content-center">
+  <div class="col-sm-10 col-md-8 col-xl-6">
+    <h1 class="my-5">Edit Post</h1>
+  </div>
+</div>
+<div class="row justify-content-center">
+  <div class="col-sm-10 col-md-8 col-xl-6 border shadow rounded p-3 mx-3 mx-md-0">
+
+    <!-- form action should be to posts/{{ post.id }} -->
+    <form action="/posts/{{ post.id }}/edit" method="POST">
+      <!-- <form method="POST"> -->
+      <div class="form-group row">
+        <label for="title">Title</label>
+        <input class="form-control" type="text" name="title" class="form-control" id="title" value={{ post.title }}>
+      </div>
+      <div class="form-group row">
+        <label for="content">Content</label>
+        <textarea class="form-control" name="content" id="content" cols="80" rows="20">
+          {{ post.content }}
+        </textarea>
+      </div>
+      <div class="form-group row">
+        <div class="ml-auto mr-3">
+          <a class="btn btn-outline-primary" href="/posts/{{ post.id }}">Cancel</a>
+          <button class="btn btn-success" type="submit">Edit</button>
+        </div>
+      </div>
+      <!-- <div class="row justify-content-end">
+        <div class="p-3 mx-3 mx-md-0">
+          <a href="/posts/{{ post.id }}" class="btn btn-outline-info">Cancel</a>
+          <button type="submit" class="btn btn-success">Add</button>
+        </div>
+      </div> -->
+    </form>
+  </div>
+
+</div>
+{% endblock %}
