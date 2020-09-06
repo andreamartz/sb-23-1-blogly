@@ -41,6 +41,14 @@ class User(db.Model):
     def get_full_name(self):
         return f"{self.first_name} {self.last_name}"
 
+    @property
+    def full_name(self):
+        """Return full name of user."""
+        return f"{self.first_name} {self.last_name}"
+
+    posts = db.relationship("Post", backref="user",
+                            cascade="all, delete-orphan")
+
 
 class Post(db.Model):
     """Post. Post can have one user(i.e., the author)."""
@@ -71,5 +79,8 @@ class Post(db.Model):
         p = self
         return f"<Post id={p.id} title={p.title} content={p.content} created_at={p.created_at}>"
 
-    # @property
-    # def show_formatted_date():
+    @property
+    def formatted_date(self):
+        """Create a user-friendly formatted date."""
+        p = self
+        return p.created_at.strftime("%a %b %-d %Y, %-I:%M %p")
