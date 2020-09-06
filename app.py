@@ -177,3 +177,16 @@ def handle_post_edits(post_id):
 
     return redirect(f"/posts/{post.id}")
 
+
+@app.route('/posts/<int:post_id>/delete', methods=["POST"])
+def delete_post(post_id):
+    """Delete the post."""
+    # WORKS:
+    post = Post.query.get_or_404(post_id)
+    db.session.delete(post)
+
+    # DOES NOT WORK - AttributeError: 'Post' object has no attribute 'delete'
+    db.session.commit()
+    flash(f"Post '{ post.title }' deleted.")
+
+    return redirect(f"/users/{ post.user_id }")
