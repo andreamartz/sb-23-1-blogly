@@ -45,13 +45,6 @@ def list_users():
     return render_template('users/list.html', users=users)
 
 
-@app.route('/users/<int:user_id>', methods=["GET"])
-def show_user(user_id):
-    """Shows details about user"""
-    user = User.query.get_or_404(user_id)
-    return render_template('users/user-details.html', user=user)
-
-
 @app.route('/users/new', methods=["GET"])
 def show_new_user_form():
     """Shows add form for new users"""
@@ -81,6 +74,12 @@ def add_user():
     return redirect('/users')
 
 
+@app.route('/users/<int:user_id>', methods=["GET"])
+def show_user(user_id):
+    """Shows details about user"""
+
+    user = User.query.get_or_404(user_id)
+    return render_template('users/user-details.html', user=user)
 
 
 @app.route('/users/<int:user_id>/edit', methods=["GET"])
