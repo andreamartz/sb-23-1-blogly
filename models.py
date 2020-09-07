@@ -50,6 +50,7 @@ class User(db.Model):
 
 class Post(db.Model):
     """Post. Post can have one user(i.e., the author)."""
+
     __tablename__ = 'posts'
 
     id = db.Column(db.Integer,
@@ -68,10 +69,7 @@ class Post(db.Model):
                            default=datetime.datetime.now)
 
     user_id = db.Column(db.Integer,
-                        db.ForeignKey('users.id'))
-
-    # each post will have a user attribute based on the foreign key
-    user = db.relationship('User', backref='posts')
+                        db.ForeignKey('users.id'), nullable=False)
 
     def __repr__(self):
         p = self
