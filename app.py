@@ -70,6 +70,7 @@ def add_user():
     db.session.add(new_user)
     db.session.commit()
 
+    flash(f"User {new_user.full_name} added.")
 
     return redirect('/users')
 
@@ -106,6 +107,7 @@ def edit_user(user_id):
     db.session.add(user)
     db.session.commit()
 
+    flash(f"User {user.full_name} edited.")
 
     return redirect('/users')
 
@@ -118,8 +120,8 @@ def delete_user(user_id):
     db.session.delete(user)
 
 
-    flash(f"User {user.full_name} deleted.")
     db.session.commit()
+    flash(f"User {user.full_name} deleted.")
 
     return redirect('/users')
 
@@ -152,6 +154,7 @@ def add_post(user_id):
     db.session.add(new_post)
     db.session.commit()
 
+    flash(f"Post '{new_post.title}' added.")
 
     return redirect(f"/users/{user_id}")
 
