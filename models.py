@@ -32,7 +32,7 @@ class User(db.Model):
     last_name = db.Column(db.String(50),
                           nullable=False)
 
-    image_url = db.Column(db.String(250), nullable=False,
+    image_url = db.Column(db.Text, nullable=False,
                           default=DEFAULT_IMAGE_URL)
 
     posts = db.relationship("Post", backref="user",
