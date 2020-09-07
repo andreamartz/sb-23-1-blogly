@@ -40,10 +40,7 @@ class User(db.Model):
 
     def __repr__(self):
         u = self
-        return f"<User id={u.id} name={u.name} species={u.species} hunger={u.hunger}>"
-
-    def get_full_name(self):
-        return f"{self.first_name} {self.last_name}"
+        return f"<User id={u.id} first_name={u.first_name} last_name={u.last_name} image_url={u.image_url}>"
 
     @property
     def full_name(self):
