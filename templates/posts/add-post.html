@@ -3,9 +3,12 @@
 {% block title %}Create a Post{% endblock %}
 
 {% block content %}
-<h1>Add Post for {{user.get_full_name()}}</h1>
+
 <div class="row justify-content-center">
-  <div class="col-md-6 col-xl-4 border shadow rounded p-3 mx-3 mx-md-0">
+  <div class="col-sm-10 col-md-8 col-xl-6">
+    <h1>Add Post for {{ user.full_name }}</h1>
+  </div>
+</div>
     <!-- form action should be to users/{{user_id}}/posts -->
     <form action="/users/{{user.id}}/posts/new" method="POST">
       <!-- <form method="POST"> -->
