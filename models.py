@@ -6,17 +6,16 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+DEFAULT_IMAGE_URL = "https://www.freeiconspng.com/uploads/icon-user-blue-symbol-people-person-generic--public-domain--21.png"
+
 
 def connect_db(app):
     """Connects the database to the Flask app.
-    This function should be called from the app."""
+    This function should be called from the Flask app."""
     db.app = app
     db.init_app(app)
 
-
-DEFAULT_IMAGE_URL = "https://www.freeiconspng.com/uploads/icon-user-blue-symbol-people-person-generic--public-domain--21.png"
-
-# MODELS GO BELOW!
+#  Models are below
 
 
 class User(db.Model):
