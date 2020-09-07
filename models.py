@@ -35,6 +35,9 @@ class User(db.Model):
     image_url = db.Column(db.String(250), nullable=False,
                           default=DEFAULT_IMAGE_URL)
 
+    posts = db.relationship("Post", backref="user",
+                            cascade="all, delete-orphan")
+
     def __repr__(self):
         u = self
         return f"<User id={u.id} name={u.name} species={u.species} hunger={u.hunger}>"
@@ -46,9 +49,6 @@ class User(db.Model):
     def full_name(self):
         """Return full name of user."""
         return f"{self.first_name} {self.last_name}"
-
-    posts = db.relationship("Post", backref="user",
-                            cascade="all, delete-orphan")
 
 
 class Post(db.Model):
