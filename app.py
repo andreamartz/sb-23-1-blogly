@@ -10,8 +10,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly_db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['SECRET_KEY'] = "supersecretcodefordebugtoolbar"
-# Having the Debug Toolbar show redirects explicitly is often useful.  To turn it on, comment out this line:
+
+# Having the Debug Toolbar show redirects explicitly is often useful.  Turned on (True) is the default. To turn it off, uncomment this line:
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+
 debug = DebugToolbarExtension(app)
 
 connect_db(app)
@@ -20,14 +22,16 @@ connect_db(app)
 @app.route('/')
 def home():
     """Shows list of the five most recent posts."""
+
     posts = Post.query.order_by(Post.created_at.desc()).limit(5)
-    # users = User.query.order_by(User.last_name, User.first_name).all()
+
     return render_template('posts/homepage.html', posts=posts)
 
 
 @app.errorhandler(404)
 def page_not_found(error):
     """Handle 404 errors by showing custom 404 page."""
+
     return render_template('404.html'), 404
 
 # Users routes
@@ -36,6 +40,7 @@ def page_not_found(error):
 @app.route('/users', methods=["GET"])
 def list_users():
     """Shows list of all users in db"""
+
     users = User.query.order_by(User.last_name, User.first_name).all()
     return render_template('users/list.html', users=users)
 
@@ -50,6 +55,7 @@ def show_user(user_id):
 @app.route('/users/new', methods=["GET"])
 def show_new_user_form():
     """Shows add form for new users"""
+
     return render_template('users/add-user.html')
 
 
@@ -66,11 +72,15 @@ def add_user():
     new_user = User(first_name=first_name,
                     last_name=last_name,
                     image_url=image_url)
+
     # Add to db
     db.session.add(new_user)
     db.session.commit()
 
+
     return redirect('/users')
+
+
 
 
 @app.route('/users/<int:user_id>/edit', methods=["GET"])
@@ -97,6 +107,7 @@ def edit_user(user_id):
     db.session.add(user)
     db.session.commit()
 
+
     return redirect('/users')
 
 
@@ -117,6 +128,7 @@ def delete_user(user_id):
 @app.route('/users/<int:user_id>/posts/new', methods=["GET"])
 def show_new_post_form(user_id):
     """Show form to add a post for that user."""
+
     user = User.query.get_or_404(user_id)
     return render_template('/posts/add-post.html', user=user)
 
@@ -125,6 +137,7 @@ def show_new_post_form(user_id):
 def add_post(user_id):
     """Handle form submission to add a post.
     Redirect to the user detail page."""
+
     user = User.query.get_or_404(user_id)
 
     # Get form info
@@ -140,6 +153,7 @@ def add_post(user_id):
     db.session.add(new_post)
     db.session.commit()
 
+
     return redirect(f"/users/{user_id}")
 
 # Posts routes
@@ -149,6 +163,7 @@ def add_post(user_id):
 def show_post(post_id):
     """Show a post.
     Show buttons to edit and delete the post."""
+
     post = Post.query.get_or_404(post_id)
     return render_template("/posts/post-details.html", post=post)
 
@@ -157,6 +172,7 @@ def show_post(post_id):
 def show_post_edit_form(post_id):
     """Show form to edit a post.
     Also offer option to cancel (and go back to user page)."""
+
     post = Post.query.get_or_404(post_id)
     return render_template('/posts/edit-post.html', post=post)
 
