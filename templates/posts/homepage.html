@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
-{% block title %}{% endblock %}
+{% block title %}Recent Posts{% endblock %}
 
 {% block content %}
 
 <section class="row justify-content-center mt-5">
-  <h1 class="col-12">Blogly Recent Posts</h1>
+  <h1 class="col-10 mb-3">Blogly Recent Posts</h1>
 
   {% for post in posts %}
-  <article class="col-12 mb-3">
+  <article class="col-10 mb-3">
     <h2><a href="/posts/{{ post.id }}">{{ post.title }}</a></h2>
     <p>{{ post.content }}</p>
     <small>By {{ post.user.full_name }} on {{ post.formatted_date }}</small>
