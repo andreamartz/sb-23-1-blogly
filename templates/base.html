@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
   <link rel="stylesheet" href="../static/app.css">
-  <title>Blogly &ndash; {% block title %}{% endblock%}</title>
+  <title>Blogly &ndash; {% block title %}{% endblock %}</title>
 </head>
 
 <body>
@@ -23,7 +23,7 @@
       </li>
     </ul>
   </nav>
-  <main id="content" class="container">
+  <main id="content" class="container mt-5">
     <!-- See 19.3 Flash Messaging -->
     {% for msg in get_flashed_messages() %}
     <p>{{ msg }}</p>

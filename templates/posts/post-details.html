@@ -4,10 +4,10 @@
 
 {% block content %}
 <div class="row justify-content-center mt-5">
-  <div class="col-md-6 order-last text-left">
+  <div class="col-md-8 order-last text-left">
     <h1>{{ post.title }}</h1>
     <p>{{ post.content }}</p>
-    <p>By {{ post.user.get_full_name() }}</p>
+    <p>By {{ post.user.full_name }}</p>
     <form action="">
       <button class="btn btn-outline-primary" formmethod="GET" formaction="/users/{{post.user.id}}">Cancel
       </button>

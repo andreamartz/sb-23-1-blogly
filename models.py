@@ -1,20 +1,21 @@
 """Models for Blogly."""
 
+# import Python module datetime
+import datetime
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+DEFAULT_IMAGE_URL = "https://www.freeiconspng.com/uploads/icon-user-blue-symbol-people-person-generic--public-domain--21.png"
+
 
 def connect_db(app):
     """Connects the database to the Flask app.
-    This function should be called from the app."""
+    This function should be called from the Flask app."""
     db.app = app
     db.init_app(app)
 
-
-DEFAULT_IMAGE_URL = "https://www.freeiconspng.com/uploads/icon-user-blue-symbol-people-person-generic--public-domain--21.png"
-
-# MODELS GO BELOW!
+#  Models are below
 
 
 class User(db.Model):
@@ -31,27 +32,25 @@ class User(db.Model):
     last_name = db.Column(db.String(50),
                           nullable=False)
 
-    image_url = db.Column(db.String(250), nullable=False,
+    image_url = db.Column(db.Text, nullable=False,
                           default=DEFAULT_IMAGE_URL)
+
+    posts = db.relationship("Post", backref="user",
+                            cascade="all, delete-orphan")
 
     def __repr__(self):
         u = self
-        return f"<User id={u.id} name={u.name} species={u.species} hunger={u.hunger}>"
-
-    def get_full_name(self):
-        return f"{self.first_name} {self.last_name}"
+        return f"<User id={u.id} first_name={u.first_name} last_name={u.last_name} image_url={u.image_url}>"
 
     @property
     def full_name(self):
         """Return full name of user."""
         return f"{self.first_name} {self.last_name}"
 
-    posts = db.relationship("Post", backref="user",
-                            cascade="all, delete-orphan")
-
 
 class Post(db.Model):
     """Post. Post can have one user(i.e., the author)."""
+
     __tablename__ = 'posts'
 
     id = db.Column(db.Integer,
@@ -70,10 +69,7 @@ class Post(db.Model):
                            default=datetime.datetime.now)
 
     user_id = db.Column(db.Integer,
-                        db.ForeignKey('users.id'))
-
-    # each post will have a user attribute based on the foreign key
-    user = db.relationship('User', backref='posts')
+                        db.ForeignKey('users.id'), nullable=False)
 
     def __repr__(self):
         p = self

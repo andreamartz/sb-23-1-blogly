@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 {% extends 'base.html' %}
 
-{% block title %}{{user.get_full_name()}}{% endblock %}
+{% block title %}{{user.full_name}}{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center mt-5">
   <div class="col-md-6 order-last text-left">
-    <h1>{{user.get_full_name()}}</h1>
+    <h1>{{user.full_name}}</h1>
     <form action="">
       <button class="btn btn-primary" formmethod="GET" formaction="/users/{{ user.id }}/edit">
         Edit
@@ -26,8 +26,7 @@
     <a href="/users/{{ user.id }}/posts/new"><button class="btn btn-primary">Add Post</button></a>
   </div>
   <div class="col-md-6 order-first d-flex justify-content-center">
-    <figure class="user-image"><img class="figure-img img-fluid" src="{{user.image_url}}"
-        alt="{{ user.get_full_name() }}">
+    <figure class="user-image"><img class="figure-img img-fluid" src="{{user.image_url}}" alt="{{ user.full_name }}">
     </figure>
   </div>
 
