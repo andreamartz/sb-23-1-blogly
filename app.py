@@ -229,3 +229,19 @@ def show_tag(tag_id):
     return render_template('/tags/tag-details.html', tag=tag, posts=posts)
 
 
+@app.route('/tags/new', methods=["GET", "POST"])
+def add_tag():
+    """Show form to add a new tag (GET).
+    Process submitted form data (POST)."""
+
+    if request.method == 'POST':
+        name = request.form["name"]
+        new_tag = Tag(name=name)
+        db.session.add(new_tag)
+        db.session.commit()
+        flash(f'Tag {new_tag.name} was created.')
+        return redirect('/tags')
+    else:
+        return render_template('/tags/add-tag.html')
+
+
