@@ -220,3 +220,12 @@ def list_tags():
     return render_template('tags/list-tags.html', tags=tags)
 
 
+@app.route('/tags/<int:tag_id>', methods=["GET"])
+def show_tag(tag_id):
+    """Show tag details."""
+
+    tag = Tag.query.get_or_404(tag_id)
+    posts = tag.posts
+    return render_template('/tags/tag-details.html', tag=tag, posts=posts)
+
+
