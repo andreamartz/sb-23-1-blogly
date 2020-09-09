@@ -209,3 +209,14 @@ def delete_post(post_id):
     flash(f"Post '{ post.title }' deleted.")
 
     return redirect(f"/users/{ post.user_id }")
+
+
+# Tag routes
+@app.route('/tags', methods=["GET"])
+def list_tags():
+    """Shows list of all tags in db"""
+
+    tags = Tag.query.all()
+    return render_template('tags/list-tags.html', tags=tags)
+
+
