@@ -245,3 +245,27 @@ def add_tag():
         return render_template('/tags/add-tag.html')
 
 
+@app.route('/tags/<int:tag_id>/edit', methods=["GET", "POST"])
+def edit_tag(tag_id):
+    """Show form to edit a tag (GET).
+    Process submitted form data (POST)."""
+
+    tag = Tag.query.get_or_404(tag_id)
+    orig_name = tag.name
+
+    if request.method == 'POST':
+        # Get form info
+        tag.name = request.form["name"]
+        new_name = tag.name
+
+        # Add to db
+        db.session.add(tag)
+        db.session.commit()
+
+        flash(f"Tag { orig_name } was successfully changed to { new_name }.")
+
+        return redirect("/tags")
+
+    else:
+        return render_template("/tags/edit-tag.html", tag=tag)
+
