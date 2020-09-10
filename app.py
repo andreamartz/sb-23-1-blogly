@@ -209,3 +209,63 @@ def delete_post(post_id):
     flash(f"Post '{ post.title }' deleted.")
 
     return redirect(f"/users/{ post.user_id }")
+
+
+# Tag routes
+@app.route('/tags', methods=["GET"])
+def list_tags():
+    """Shows list of all tags in db"""
+
+    tags = Tag.query.all()
+    return render_template('tags/list-tags.html', tags=tags)
+
+
+@app.route('/tags/<int:tag_id>', methods=["GET"])
+def show_tag(tag_id):
+    """Show tag details."""
+
+    tag = Tag.query.get_or_404(tag_id)
+    posts = tag.posts
+    return render_template('/tags/tag-details.html', tag=tag, posts=posts)
+
+
+@app.route('/tags/new', methods=["GET", "POST"])
+def add_tag():
+    """Show form to add a new tag (GET).
+    Process submitted form data (POST)."""
+
+    if request.method == 'POST':
+        name = request.form["name"]
+        new_tag = Tag(name=name)
+        db.session.add(new_tag)
+        db.session.commit()
+        flash(f'Tag {new_tag.name} was created.')
+        return redirect('/tags')
+    else:
+        return render_template('/tags/add-tag.html')
+
+
+@app.route('/tags/<int:tag_id>/edit', methods=["GET", "POST"])
+def edit_tag(tag_id):
+    """Show form to edit a tag (GET).
+    Process submitted form data (POST)."""
+
+    tag = Tag.query.get_or_404(tag_id)
+    orig_name = tag.name
+
+    if request.method == 'POST':
+        # Get form info
+        tag.name = request.form["name"]
+        new_name = tag.name
+
+        # Add to db
+        db.session.add(tag)
+        db.session.commit()
+
+        flash(f"Tag { orig_name } was successfully changed to { new_name }.")
+
+        return redirect("/tags")
+
+    else:
+        return render_template("/tags/edit-tag.html", tag=tag)
+
