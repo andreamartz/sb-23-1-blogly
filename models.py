@@ -71,6 +71,12 @@ class Post(db.Model):
     user_id = db.Column(db.Integer,
                         db.ForeignKey('users.id'), nullable=False)
 
+    posts_tags = db.relationship("PostTag",
+                                 backref="post", cascade="all, delete-orphan")
+
+    tags = db.relationship("Tag",
+                           secondary="posts_tags", backref="posts")
+
     def __repr__(self):
         p = self
         return f"<Post id={p.id} title={p.title} content={p.content} created_at={p.created_at}>"

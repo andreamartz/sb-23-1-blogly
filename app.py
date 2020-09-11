@@ -215,7 +215,6 @@ def delete_post(post_id):
     post = Post.query.get_or_404(post_id)
     db.session.delete(post)
 
-    # DOES NOT WORK - AttributeError: 'Post' object has no attribute 'delete'
     db.session.commit()
     flash(f"Post '{ post.title }' deleted.")
 
@@ -281,3 +280,15 @@ def edit_tag(tag_id):
     else:
         return render_template("/tags/edit-tag.html", tag=tag)
 
+
+@app.route('/tags/<int:tag_id>/delete', methods=["POST"])
+def delete_tag(tag_id):
+
+    tag = Tag.query.get_or_404(tag_id)
+    name = tag.name
+
+    db.session.delete(tag)
+    db.session.commit()
+    flash(f"Tag '{ tag.name }' deleted.")
+
+    return redirect('/tags')
