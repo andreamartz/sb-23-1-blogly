@@ -25,36 +25,29 @@ class UserViewsTestCase(TestCase):
 
         Post.query.delete()
         User.query.delete()
-
-        date_time = datetime.datetime(2020, 1, 1, 0, 00, 00)
-
-        user1 = User(first_name="FirstName1", last_name="LastName1",
-                     image_url="http://lorempixel.com/400/200/people/6/", id=1)
-        user2 = User(first_name="FirstName2", last_name="LastName2",
-                     image_url="http://lorempixel.com/400/200/people/7/", id=2)
-
-        post1 = Post(title="Title1", content="Content1",
-                     user_id=2, created_at=date_time)
-        post2 = Post(title="Title2", content="Content2",
-                     user_id=2, created_at=date_time)
-
-        db.session.add(user1)
-        db.session.add(user2)
         db.session.commit()
 
-        db.session.add(post1)
-        db.session.add(post2)
+        date_time1 = datetime.datetime(2020, 1, 1, 0, 0, 0)
+        date_time2 = datetime.datetime(2020, 1, 1, 0, 0, 1)
+
+        user1 = User(first_name="FirstName1", last_name="LastName1",
+                     image_url="http://lorempixel.com/400/200/people/6/")
+        user2 = User(first_name="FirstName2", last_name="LastName2",
+                     image_url="http://lorempixel.com/400/200/people/7/")
+
+        db.session.add_all([user1, user2])
+        db.session.commit()
+
+        post1 = Post(title="Title1", content="Content1",
+                     user_id=user2.id, created_at=date_time1)
+        post2 = Post(title="Title2", content="Content2",
+                     user_id=user2.id, created_at=date_time2)
+
+        db.session.add_all([post1, post2])
         db.session.commit()
 
         self.user1 = user1
         self.user2 = user2
-        self.user1_id = user1.id
-        self.user2_id = user2.id
-
-        self.post1 = post1
-        self.post2 = post2
-        self.post1_id = post1.id
-        self.post2_id = post2.id
 
     def tearDown(self):
         """Clean up any fouled transaction."""
