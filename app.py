@@ -2,7 +2,7 @@
 
 from flask import Flask, request, render_template, redirect, flash
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User, Post
+from models import db, connect_db, User, Post, Tag, PostTag
 
 app = Flask(__name__)
 
@@ -86,8 +86,8 @@ def show_user(user_id):
 @app.route('/users/<int:user_id>/edit', methods=["GET"])
 def show_edit_user(user_id):
     """Shows user edit page"""
+
     user = User.query.get_or_404(user_id)
-    # NOTE: handle the situation where user_id is not valid
     return render_template('users/edit-user.html', user=user)
 
 
