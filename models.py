@@ -86,3 +86,30 @@ class Post(db.Model):
         """Create a user-friendly formatted date."""
         p = self
         return p.created_at.strftime("%a %b %-d %Y, %-I:%M %p")
+
+
+class Tag(db.Model):
+    """Tag for posts. 
+    A single tag can be on many posts.
+    A single post can have many tags."""
+
+    __tablename__ = 'tags'
+
+    id = db.Column(db.Integer,
+                   primary_key=True,
+                   autoincrement=True)
+
+    name = db.Column(db.Text,
+                     unique=True,
+                     nullable=False)
+
+    posts_tags = db.relationship("PostTag",
+                                 backref="tag",
+                                 cascade="all, delete-orphan")
+
+    def __repr__(self):
+        t = self
+        return f"<Tag id={t.id} name={t.name}>"
+
+
+class PostTag(db.Model):
