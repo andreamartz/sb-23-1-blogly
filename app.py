@@ -131,7 +131,8 @@ def show_new_post_form(user_id):
     """Show form to add a post for that user."""
 
     user = User.query.get_or_404(user_id)
-    return render_template('/posts/add-post.html', user=user)
+    tags = Tag.query.all()
+    return render_template('/posts/add-post.html', user=user, tags=tags)
 
 
 @app.route('/users/<int:user_id>/posts/new', methods=["POST"])
@@ -141,14 +142,19 @@ def add_post(user_id):
 
     user = User.query.get_or_404(user_id)
 
-    # Get form info
+    # Get form info (except tag checkboxes)
     title = request.form["title"]
     content = request.form["content"]
+
+    # Get selected tags from form
+    tag_ids = [int(num) for num in request.form.getlist("tags")]
+    tags = Tag.query.filter(Tag.id.in_(tag_ids)).all()
 
     # Create new user instance
     new_post = Post(title=title,
                     content=content,
-                    user=user)
+                    user=user,
+                    tags=tags)
 
     # Add to db
     db.session.add(new_post)
