@@ -2,7 +2,7 @@
 
 from flask import Flask, request, render_template, redirect, flash
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User, Post
+from models import db, connect_db, User, Post, Tag, PostTag
 
 app = Flask(__name__)
 
@@ -86,8 +86,8 @@ def show_user(user_id):
 @app.route('/users/<int:user_id>/edit', methods=["GET"])
 def show_edit_user(user_id):
     """Shows user edit page"""
+
     user = User.query.get_or_404(user_id)
-    # NOTE: handle the situation where user_id is not valid
     return render_template('users/edit-user.html', user=user)
 
 
@@ -131,7 +131,8 @@ def show_new_post_form(user_id):
     """Show form to add a post for that user."""
 
     user = User.query.get_or_404(user_id)
-    return render_template('/posts/add-post.html', user=user)
+    tags = Tag.query.all()
+    return render_template('/posts/add-post.html', user=user, tags=tags)
 
 
 @app.route('/users/<int:user_id>/posts/new', methods=["POST"])
@@ -141,14 +142,19 @@ def add_post(user_id):
 
     user = User.query.get_or_404(user_id)
 
-    # Get form info
+    # Get form info (except tag checkboxes)
     title = request.form["title"]
     content = request.form["content"]
+
+    # Get selected tags from form
+    tag_ids = [int(num) for num in request.form.getlist("tags")]
+    tags = Tag.query.filter(Tag.id.in_(tag_ids)).all()
 
     # Create new user instance
     new_post = Post(title=title,
                     content=content,
-                    user=user)
+                    user=user,
+                    tags=tags)
 
     # Add to db
     db.session.add(new_post)
@@ -176,19 +182,24 @@ def show_post_edit_form(post_id):
     Also offer option to cancel (and go back to user page)."""
 
     post = Post.query.get_or_404(post_id)
-    return render_template('/posts/edit-post.html', post=post)
+    tags = Tag.query.all()
+    return render_template('/posts/edit-post.html', post=post, tags=tags)
 
 
 @app.route('/posts/<int:post_id>/edit', methods=["POST"])
 def handle_post_edits(post_id):
-    """Handel editing of a post.
+    """Handle editing of a post.
     Redirect back to the post view."""
 
     post = Post.query.get_or_404(post_id)
 
-    # Get form info
+    # Get form info (except tags)
     post.title = request.form["title"]
     post.content = request.form["content"]
+
+    # Get selected tags from form
+    tag_ids = [int(num) for num in request.form.getlist("tags")]
+    tags = Tag.query.filter(Tag.id.in_(tag_ids)).all()
 
     # Add to db
     db.session.add(post)
@@ -204,7 +215,6 @@ def delete_post(post_id):
     post = Post.query.get_or_404(post_id)
     db.session.delete(post)
 
-    # DOES NOT WORK - AttributeError: 'Post' object has no attribute 'delete'
     db.session.commit()
     flash(f"Post '{ post.title }' deleted.")
 
@@ -251,9 +261,10 @@ def edit_tag(tag_id):
     Process submitted form data (POST)."""
 
     tag = Tag.query.get_or_404(tag_id)
-    orig_name = tag.name
 
     if request.method == 'POST':
+        orig_name = tag.name
+
         # Get form info
         tag.name = request.form["name"]
         new_name = tag.name
@@ -269,3 +280,15 @@ def edit_tag(tag_id):
     else:
         return render_template("/tags/edit-tag.html", tag=tag)
 
+
+@app.route('/tags/<int:tag_id>/delete', methods=["POST"])
+def delete_tag(tag_id):
+
+    tag = Tag.query.get_or_404(tag_id)
+    name = tag.name
+
+    db.session.delete(tag)
+    db.session.commit()
+    flash(f"Tag '{ tag.name }' deleted.")
+
+    return redirect('/tags')

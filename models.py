@@ -71,6 +71,12 @@ class Post(db.Model):
     user_id = db.Column(db.Integer,
                         db.ForeignKey('users.id'), nullable=False)
 
+    posts_tags = db.relationship("PostTag",
+                                 backref="post", cascade="all, delete-orphan")
+
+    tags = db.relationship("Tag",
+                           secondary="posts_tags", backref="posts")
+
     def __repr__(self):
         p = self
         return f"<Post id={p.id} title={p.title} content={p.content} created_at={p.created_at}>"
@@ -80,3 +86,40 @@ class Post(db.Model):
         """Create a user-friendly formatted date."""
         p = self
         return p.created_at.strftime("%a %b %-d %Y, %-I:%M %p")
+
+
+class Tag(db.Model):
+    """Tag for posts. 
+    A single tag can be on many posts.
+    A single post can have many tags."""
+
+    __tablename__ = 'tags'
+
+    id = db.Column(db.Integer,
+                   primary_key=True,
+                   autoincrement=True)
+
+    name = db.Column(db.Text,
+                     unique=True,
+                     nullable=False)
+
+    posts_tags = db.relationship("PostTag",
+                                 backref="tag",
+                                 cascade="all, delete-orphan")
+
+    def __repr__(self):
+        t = self
+        return f"<Tag id={t.id} name={t.name}>"
+
+
+class PostTag(db.Model):
+    """PostTag for joins"""
+
+    __tablename__ = "posts_tags"
+
+    post_id = db.Column(db.Integer,
+                        db.ForeignKey('posts.id'), primary_key=True)
+
+    tag_id = db.Column(db.Integer,
+                       db.ForeignKey('tags.id'),
+                       primary_key=True)
