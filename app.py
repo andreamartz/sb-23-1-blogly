@@ -182,19 +182,24 @@ def show_post_edit_form(post_id):
     Also offer option to cancel (and go back to user page)."""
 
     post = Post.query.get_or_404(post_id)
-    return render_template('/posts/edit-post.html', post=post)
+    tags = Tag.query.all()
+    return render_template('/posts/edit-post.html', post=post, tags=tags)
 
 
 @app.route('/posts/<int:post_id>/edit', methods=["POST"])
 def handle_post_edits(post_id):
-    """Handel editing of a post.
+    """Handle editing of a post.
     Redirect back to the post view."""
 
     post = Post.query.get_or_404(post_id)
 
-    # Get form info
+    # Get form info (except tags)
     post.title = request.form["title"]
     post.content = request.form["content"]
+
+    # Get selected tags from form
+    tag_ids = [int(num) for num in request.form.getlist("tags")]
+    tags = Tag.query.filter(Tag.id.in_(tag_ids)).all()
 
     # Add to db
     db.session.add(post)
