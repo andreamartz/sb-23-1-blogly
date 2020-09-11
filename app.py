@@ -262,9 +262,10 @@ def edit_tag(tag_id):
     Process submitted form data (POST)."""
 
     tag = Tag.query.get_or_404(tag_id)
-    orig_name = tag.name
 
     if request.method == 'POST':
+        orig_name = tag.name
+
         # Get form info
         tag.name = request.form["name"]
         new_name = tag.name
